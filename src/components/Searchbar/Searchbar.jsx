@@ -1,45 +1,41 @@
-import { Component } from 'react';
+import { useState } from 'react';
 import { toast } from 'react-toastify';
 
-export class Searchbar extends Component {
-  state = {
-    tags: '',
-  };
+export function Searchbar({ onSubmit }) {
+  const [tags, setTags] = useState('');
 
-  onInputChange = event => {
+  const onInputChange = event => {
     const inputValue = event.target.value.toLowerCase();
-    this.setState({ tags: inputValue });
+    setTags(inputValue);
   };
 
-  handleSubmit = event => {
+  const handleSubmit = event => {
     event.preventDefault();
-    this.props.onSubmit(this.state.tags);
-    if (!this.state.tags.trim() === '') {
+    if (!tags.trim() === '') {
       toast.error('Введіть щось у поле');
       return;
     }
-    this.setState({ tags: '' });
+    onSubmit(tags);
+    setTags('');
   };
 
-  render() {
-    return (
-      <header className="Searchbar">
-        <form className="SearchForm" onSubmit={this.handleSubmit}>
-          <button type="submit" className="SearchForm-button ">
-            <span className="button-label">Search</span>
-          </button>
+  return (
+    <header className="Searchbar">
+      <form className="SearchForm" onSubmit={handleSubmit}>
+        <button type="submit" className="SearchForm-button ">
+          <span className="button-label">Search</span>
+        </button>
 
-          <input
-            className="SearchForm-input"
-            type="text"
-            autoComplete="off"
-            autoFocus
-            placeholder="Search images and photos"
-            value={this.state.tags}
-            onChange={this.onInputChange}
-          />
-        </form>
-      </header>
-    );
-  }
+        <input
+          className="SearchForm-input"
+          type="text"
+          autoComplete="off"
+          autoFocus
+          placeholder="Search images and photos"
+          value={tags}
+          onChange={onInputChange}
+        />
+      </form>
+    </header>
+  );
 }
